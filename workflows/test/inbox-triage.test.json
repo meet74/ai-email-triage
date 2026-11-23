@@ -1,0 +1,734 @@
+{
+  "name": "Inbox triage (test)",
+  "id": "NbTriage0000001t",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "triage-test",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "edd86128-ad67-5e5a-aca8-1c38f821fa0b",
+      "name": "Test trigger: POST a Gmail-style email",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "838789ac-67f5-5fb8-a57b-7a6a42529729"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: $input.item.json.body };"
+      },
+      "id": "9657c87e-5f13-595a-8746-a875fbc3f013",
+      "name": "Unwrap test body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eab01ca2-431d-59f0-b623-3b6261ff32ea",
+              "name": "triage_url",
+              "value": "http://127.0.0.1:8765",
+              "type": "string"
+            },
+            {
+              "id": "9ee28652-b5ec-5303-868c-fa4ab03b4c66",
+              "name": "sheet_id",
+              "value": "REPLACE_WITH_SPREADSHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "774c6c60-fb47-50c3-bb8f-d120f0869873",
+              "name": "sheet_name",
+              "value": "Tickets",
+              "type": "string"
+            },
+            {
+              "id": "39309908-531b-5e45-9777-47c6ad6de4ab",
+              "name": "channel_support",
+              "value": "C0SUPPORT00",
+              "type": "string"
+            },
+            {
+              "id": "04657769-f179-5225-b654-f0ef97f00341",
+              "name": "channel_sales",
+              "value": "C0SALES0000",
+              "type": "string"
+            },
+            {
+              "id": "41ba67b7-8553-59fc-a239-2620f2236388",
+              "name": "channel_billing",
+              "value": "C0BILLING00",
+              "type": "string"
+            },
+            {
+              "id": "7081be50-d4c0-5c4d-a340-773036fc2861",
+              "name": "channel_urgent",
+              "value": "C0URGENT000",
+              "type": "string"
+            },
+            {
+              "id": "4af65d87-fc85-5fc6-b493-edaabdeb13b4",
+              "name": "oncall_slack_id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "1d809c1c-0a0d-5567-adb4-f05a1b12de65",
+              "name": "sms_webhook_url",
+              "value": "http://127.0.0.1:8770/sms",
+              "type": "string"
+            },
+            {
+              "id": "29daae90-664b-5ff6-9881-197a6e9cc9c6",
+              "name": "sms_to",
+              "value": "+15555550100",
+              "type": "string"
+            },
+            {
+              "id": "a1cf614b-5ca7-55d7-8b0b-39da2175b507",
+              "name": "gmail_labels_json",
+              "value": "{\"support\": \"Label_1\", \"sales_lead\": \"Label_2\", \"billing\": \"Label_3\", \"complaint\": \"Label_4\", \"spam\": \"Label_5\", \"other\": \"Label_6\"}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "36b1631c-1331-52f4-ae22-852d2e67f0be",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        300
+      ],
+      "notes": "Edit these values for your workspace. Nothing secret belongs here."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Turns a Gmail Trigger item into the fields the rest of the flow uses.\n// Mirrors triage/text.py; the service runs the same clean-up again, which is harmless.\nconst item = $input.item.json;\n\nconst stripHtml = (h) =>\n  h.replace(/<(br|\\/p|\\/div|\\/li)\\s*\\/?>/gi, '\\n').replace(/<[^>]+>/g, '')\n    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');\n\nconst addressOf = (f) => {\n  if (!f) return { text: '', address: '' };\n  if (typeof f === 'string') {\n    const m = f.match(/<([^>]+)>/);\n    return { text: f, address: m ? m[1] : f };\n  }\n  const v = f.value && f.value[0];\n  if (v) return { text: v.name ? `${v.name} <${v.address}>` : v.address, address: v.address };\n  return { text: f.text || '', address: f.text || '' };\n};\n\nconst sender = addressOf(item.from);\nconst subject = item.subject || '';\nconst raw = (item.text || item.textPlain || (item.html ? stripHtml(item.html) : '') || item.snippet || '')\n  .replace(/\\r\\n/g, '\\n');\n\nconst REPLY_MARKERS = [\n  /^\\s*On .{5,120}wrote:\\s*$/i,\n  /^\\s*Le .{5,120}a écrit\\s*:\\s*$/i,\n  /^\\s*El .{5,120}escribió:\\s*$/i,\n  /^\\s*-{2,}\\s*Original Message\\s*-{2,}\\s*$/i,\n  /^\\s*_{5,}\\s*$/,\n];\nconst SIGNATURE_MARKERS = [\n  /^--\\s?$/, /^\\s*Sent from my (iPhone|iPad|Android|phone|Galaxy)/i, /^\\s*Get Outlook for (iOS|Android)/i,\n  /^\\s*(This|The) (e-?mail|message) (and any attachments )?(is|are) confidential/i,\n  /^\\s*Envoyé de mon (iPhone|iPad)/i, /^\\s*Enviado desde mi (iPhone|iPad|móvil)/i,\n];\nconst FORWARD = /-{3,}\\s*(Forwarded message|Message transféré|Mensaje reenviado)\\s*-{3,}/i;\n\nconst lines = raw.split('\\n');\nlet cut = -1;\nfor (let i = 0; i < lines.length && cut < 0; i++) {\n  if (FORWARD.test(lines[i])) break; // forwarded text is content, not history\n  if (lines[i].trimStart().startsWith('>') || REPLY_MARKERS.some((r) => r.test(lines[i]))) cut = i;\n  else if (/^\\s*From:\\s.+$/i.test(lines[i]) && lines.slice(i + 1, i + 4).some((l) => /^\\s*(Sent|Date|Envoyé|Enviado):/i.test(l))) cut = i;\n}\nlet fresh = (cut < 0 ? lines : lines.slice(0, cut));\nconst quoted = cut < 0 ? '' : lines.slice(cut).join('\\n').trim();\nfor (let i = 0; i < fresh.length; i++) {\n  if (FORWARD.test(fresh[i])) break;\n  if (SIGNATURE_MARKERS.some((r) => r.test(fresh[i]))) { fresh = fresh.slice(0, i); break; }\n}\nconst body = fresh.join('\\n').trim();\n\nconst STOP = {\n  en: 'the and is are to of in for with my your you i we this that have has not was it on be can please thanks order',\n  fr: 'le la les de des et est un une pour avec mon ma vous je nous ce que pas sur bonjour merci commande êtes suis',\n  es: 'el la los las de y es un una para con mi su usted yo nosotros que no en hola gracias pedido por está',\n  de: 'der die das und ist ein eine für mit mein ihr sie ich wir nicht auf bitte danke bestellung',\n};\nconst words = (subject + ' ' + body).toLowerCase().match(/[a-zà-ÿ']+/g) || [];\nconst score = {};\nfor (const [lang, list] of Object.entries(STOP)) {\n  const set = new Set(list.split(' '));\n  score[lang] = words.slice(0, 400).filter((w) => set.has(w)).length;\n}\nlet language = Object.keys(score).reduce((a, b) => (score[b] > score[a] ? b : a), 'en');\nif (score[language] === 0 || (language !== 'en' && score[language] <= score.en)) language = 'en';\n\nconst id = String(item.id || item.messageId || Date.now());\nconst day = new Date().toISOString().slice(0, 10).replace(/-/g, '');\n\nreturn {\n  json: {\n    message_id: id,\n    thread_id: item.threadId || id,\n    ticket_id: `T-${day}-${id.slice(-6).toUpperCase()}`,\n    from: sender.text,\n    from_address: sender.address,\n    subject,\n    body,\n    thread: quoted ? [quoted] : [],\n    language_hint: language,\n    received_at: item.date || new Date().toISOString(),\n  },\n};\n"
+      },
+      "id": "83ebc8e2-696a-5723-ae86-fc0f33ddfea3",
+      "name": "Normalise email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        300
+      ],
+      "notes": "Strips quoted history and signatures, detects language, builds the ticket id."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.triage_url }}/triage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ from: $json.from, subject: $json.subject, body: $json.body, thread: $json.thread }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "e38d3da4-a425-5ef1-a7b1-519ec5f54351",
+      "name": "Classify and draft reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        300
+      ],
+      "notes": "Calls the triage service. Retries 3 times; a persistent failure triggers the Error alerts workflow.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Combines the normalised email and the triage result into one ticket row.\nconst mail = $('Normalise email').item.json;\nconst t = $input.item.json;\nconst cfg = $('Settings').first().json;\nconst labels = JSON.parse(cfg.gmail_labels_json || '{}');\nconst filtered = Boolean(t.meta && t.meta.skip_reason);\n\nreturn {\n  json: {\n    ticket_id: mail.ticket_id,\n    created_at: $now.toISO(),\n    message_id: mail.message_id,\n    thread_id: mail.thread_id,\n    from: mail.from,\n    subject: mail.subject,\n    category: t.category,\n    priority: t.priority,\n    sentiment: t.sentiment,\n    language: t.language,\n    summary: t.summary,\n    extracted: JSON.stringify(t.extracted),\n    draft_reply: t.draft_reply,\n    confidence: t.confidence,\n    status: filtered ? 'filtered_' + t.meta.skip_reason : 'pending_approval',\n    skip_reason: (t.meta && t.meta.skip_reason) || '',\n    approved_by: '',\n    updated_at: $now.toISO(),\n    label_id: labels[t.category] || '',\n    triage: t,\n  },\n};\n"
+      },
+      "id": "aa493bb5-fa5d-53a4-8561-dd4d21edcd98",
+      "name": "Build ticket",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/sheets/append",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "34325337-9c3f-56cf-8e47-a8aa5f902203",
+      "name": "Save ticket to sheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6aa52fed-b769-5466-9bd2-aa45a49a2b66",
+                    "leftValue": "={{ $('Build ticket').item.json.skip_reason }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Filtered (spam or auto-reply)"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "833d5e84-0c52-59c8-9a43-069b079bf356",
+                    "leftValue": "={{ $('Build ticket').item.json.priority }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "urgent"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Urgent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "de8853f8-13bb-5b09-b88a-fb1095503194",
+                    "leftValue": "={{ $('Build ticket').item.json.category }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "sales_lead"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sales lead"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8d76a9f-726f-518e-b7b6-5202f3c16f10",
+                    "leftValue": "={{ $('Build ticket').item.json.category }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "billing"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Billing"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Support, complaint, other"
+        }
+      },
+      "id": "e028abf2-2a13-5666-a02d-6adf7105476f",
+      "name": "Route by category and priority",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1400,
+        300
+      ],
+      "notes": "First match wins: filtered mail never reaches Slack, urgent mail is escalated before category routing."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/gmail/labels",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({message_id: $('Build ticket').item.json.message_id, label_id: $('Build ticket').item.json.label_id, category: $('Build ticket').item.json.category}) }}",
+        "options": {}
+      },
+      "id": "944c5b3b-0ac0-5271-8d68-e92bcbf8d55d",
+      "name": "Apply Gmail label",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.triage_url }}/slack/approval-message",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ ticket_id: $('Build ticket').item.json.ticket_id, from: $('Build ticket').item.json.from, subject: $('Build ticket').item.json.subject, triage: $('Build ticket').item.json.triage, channel: $json.slack_channel }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "78afdd1a-2cad-51a2-a251-b404898be52e",
+      "name": "Render approval message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1950,
+        600
+      ],
+      "notes": "The service builds the Slack Block Kit JSON so the message layout is tested in Python."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "b1c43cee-a968-5856-9a3f-fa0ccfafc7c4",
+      "name": "Post approval message to Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "560000b4-3232-5d3f-a166-214f72e18ac6",
+              "name": "slack_channel",
+              "value": "={{ $('Settings').first().json.channel_urgent }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3877ab93-2d04-57ed-9510-f5487c46437e",
+      "name": "Channel: urgent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96caaa22-37ca-511f-b825-c2d2037a5fb9",
+              "name": "slack_channel",
+              "value": "={{ $('Settings').first().json.channel_sales }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "bc0d218b-3534-5036-8607-5c0b916c9a52",
+      "name": "Channel: sales",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc4c0bf8-94cf-5ca3-9087-31921747201b",
+              "name": "slack_channel",
+              "value": "={{ $('Settings').first().json.channel_billing }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "6119c957-ca4c-5318-87a1-45c269c4cd85",
+      "name": "Channel: billing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0743134-9f55-59ef-af3d-2b099eab19b2",
+              "name": "slack_channel",
+              "value": "={{ $('Settings').first().json.channel_support }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3db2d52d-91da-5e3e-a1b9-b909edd5c783",
+      "name": "Channel: support",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.triage_url }}/slack/urgent-alert",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ ticket_id: $('Build ticket').item.json.ticket_id, from: $('Build ticket').item.json.from, category: $('Build ticket').item.json.category, summary: $('Build ticket').item.json.summary, oncall_slack_id: $('Settings').first().json.oncall_slack_id }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "c7d0a0f2-5dfa-5989-b54d-4a4be2071cb7",
+      "name": "Build urgent alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1950,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({channel: $('Settings').first().json.channel_urgent, text: $json.slack_text}) }}",
+        "options": {}
+      },
+      "id": "ef5d9c6e-2074-56ef-9517-afdb0a668f18",
+      "name": "Slack: urgent mention",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.sms_webhook_url }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ to: $('Settings').first().json.sms_to, message: $json.sms_text, ticket_id: $('Build ticket').item.json.ticket_id }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "c981428b-4729-55a8-adae-3bd9650440db",
+      "name": "SMS-ready webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        200
+      ],
+      "notes": "Posts {to, message, ticket_id}; message is at most 160 characters. Point it at Twilio, an SMS gateway or any automation hook."
+    }
+  ],
+  "connections": {
+    "Test trigger: POST a Gmail-style email": {
+      "main": [
+        [
+          {
+            "node": "Unwrap test body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unwrap test body": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Normalise email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalise email": {
+      "main": [
+        [
+          {
+            "node": "Classify and draft reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify and draft reply": {
+      "main": [
+        [
+          {
+            "node": "Build ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ticket": {
+      "main": [
+        [
+          {
+            "node": "Save ticket to sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save ticket to sheet": {
+      "main": [
+        [
+          {
+            "node": "Route by category and priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by category and priority": {
+      "main": [
+        [
+          {
+            "node": "Apply Gmail label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Channel: urgent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Channel: sales",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Channel: billing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Channel: support",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel: urgent": {
+      "main": [
+        [
+          {
+            "node": "Render approval message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Build urgent alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel: sales": {
+      "main": [
+        [
+          {
+            "node": "Render approval message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel: billing": {
+      "main": [
+        [
+          {
+            "node": "Render approval message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel: support": {
+      "main": [
+        [
+          {
+            "node": "Render approval message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render approval message": {
+      "main": [
+        [
+          {
+            "node": "Post approval message to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post approval message to Slack": {
+      "main": [
+        [
+          {
+            "node": "Apply Gmail label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build urgent alert": {
+      "main": [
+        [
+          {
+            "node": "Slack: urgent mention",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SMS-ready webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "NbErrors0000001t"
+  },
+  "pinData": {},
+  "tags": []
+}

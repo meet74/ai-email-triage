@@ -9,3 +9,4 @@ node_modules/
 eval/results/*.tmp
 .n8n-run/
 *.log
+.tools24/

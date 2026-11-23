@@ -1,0 +1,90 @@
+{
+  "name": "Error alerts (test)",
+  "id": "NbErrors0000001t",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a5c171a1-7560-5f49-8105-69f3d550daa9",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6663815-fb96-5082-a39e-8ae824919b2c",
+              "name": "alert_channel",
+              "value": "C0ALERTS000",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "723b874b-865f-566c-8558-bdec6a924be7",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Edit these values for your workspace. Nothing secret belongs here."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({channel: $('Settings').first().json.alert_channel, text: 'Workflow failed: ' + $('Error Trigger').item.json.workflow.name + '. Node: ' + ($('Error Trigger').item.json.execution.lastNodeExecuted || 'unknown') + '. Error: ' + ($('Error Trigger').item.json.execution.error.message || 'no message') + '. Execution: ' + ($('Error Trigger').item.json.execution.url || 'n/a')}) }}",
+        "options": {}
+      },
+      "id": "379fc62b-23a2-59b4-a40c-50af0e2847f4",
+      "name": "Alert in Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Alert in Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

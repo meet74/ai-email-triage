@@ -1,0 +1,232 @@
+{
+  "name": "Daily digest (test)",
+  "id": "NbDigest0000001t",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "digest-test",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "1f87c26d-b700-5f61-b3a2-4caf36e900dd",
+      "name": "Test trigger: run the digest now",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "19fa2ba4-afa4-5e23-9dd1-1fdc2751f223"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03086a2a-2b4a-5f48-896f-20787473b264",
+              "name": "triage_url",
+              "value": "http://127.0.0.1:8765",
+              "type": "string"
+            },
+            {
+              "id": "74402764-9756-5036-bc28-8737fb39d137",
+              "name": "sheet_id",
+              "value": "REPLACE_WITH_SPREADSHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "2bd79066-08e9-5133-b675-1e26b9c1f5d5",
+              "name": "sheet_name",
+              "value": "Tickets",
+              "type": "string"
+            },
+            {
+              "id": "2fcdf1b7-0356-50a7-87cc-3929b6734d42",
+              "name": "digest_channel",
+              "value": "C0DIGEST000",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "0351df63-62c1-5511-a183-a6bdadc41e5b",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Edit these values for your workspace. Nothing secret belongs here."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ecdcb62f-a8dd-5f42-95f6-72b0b59bade0",
+              "name": "date",
+              "value": "='2026-11-21'",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ca78cb09-d87b-5b64-b9ce-869e30d6ed0f",
+      "name": "Pick yesterday",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=http://127.0.0.1:8770/sheets/all",
+        "options": {}
+      },
+      "id": "7f9e0afb-474f-5a9e-a6e0-efb9ded9e4fe",
+      "name": "Read all tickets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "tickets",
+        "options": {}
+      },
+      "id": "7537554d-cfee-59d4-9b14-4cdeeb637e4a",
+      "name": "Collect tickets",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.triage_url }}/digest",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ date: $('Pick yesterday').first().json.date, tickets: $json.tickets }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "135e04f5-add6-540e-90c0-7f552525e71b",
+      "name": "Build digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "notes": "Counts by category and priority for the day, plus every urgent ticket still waiting."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({channel: 'digest', text: $json.text, blocks: $json.blocks}) }}",
+        "options": {}
+      },
+      "id": "ce912b35-e1f4-5685-9222-357cdac58be3",
+      "name": "Post digest to Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Test trigger: run the digest now": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Pick yesterday",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick yesterday": {
+      "main": [
+        [
+          {
+            "node": "Read all tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read all tickets": {
+      "main": [
+        [
+          {
+            "node": "Collect tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect tickets": {
+      "main": [
+        [
+          {
+            "node": "Build digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build digest": {
+      "main": [
+        [
+          {
+            "node": "Post digest to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

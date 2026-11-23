@@ -20,6 +20,7 @@ class ApprovalRequest(BaseModel):
     sender: str = Field(alias="from", max_length=500)
     subject: str = ""
     triage: dict
+    channel: str = ""
     model_config = ConfigDict(populate_by_name=True)
 
 
@@ -68,7 +69,8 @@ def create_app(settings: Settings | None = None, client: LLMClient | None = None
 
     @app.post("/slack/approval-message", dependencies=[Depends(require_key)])
     def slack_approval(req: ApprovalRequest):
-        return approval_message(req.ticket_id, req.sender, req.subject, req.triage)
+        msg = approval_message(req.ticket_id, req.sender, req.subject, req.triage)
+        return {"channel": req.channel, **msg}
 
     @app.post("/slack/edit-modal", dependencies=[Depends(require_key)])
     def slack_edit(req: EditRequest):

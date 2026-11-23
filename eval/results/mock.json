@@ -1,0 +1,228 @@
+{
+  "name": "mock",
+  "model": "mock:heuristic-v1",
+  "emails": 80,
+  "scored": 80,
+  "errors": 0,
+  "category_accuracy": 0.8625,
+  "priority_accuracy": 0.825,
+  "language_accuracy": 1.0,
+  "confusion_matrix": {
+    "support": {
+      "support": 14,
+      "other": 5
+    },
+    "other": {
+      "other": 17
+    },
+    "sales_lead": {
+      "sales_lead": 10
+    },
+    "billing": {
+      "billing": 10,
+      "complaint": 1,
+      "support": 1
+    },
+    "complaint": {
+      "complaint": 8,
+      "other": 1
+    },
+    "spam": {
+      "spam": 10,
+      "other": 3
+    }
+  },
+  "urgent_recall": [
+    6,
+    9
+  ],
+  "urgent_precision": [
+    6,
+    7
+  ],
+  "extraction": {
+    "fields": {
+      "name": {
+        "labelled": 61,
+        "correct": 60
+      },
+      "company": {
+        "labelled": 15,
+        "correct": 8
+      },
+      "order_id": {
+        "labelled": 34,
+        "correct": 33
+      },
+      "invoice_number": {
+        "labelled": 4,
+        "correct": 4
+      },
+      "product": {
+        "labelled": 38,
+        "correct": 35
+      },
+      "requested_action": {
+        "labelled": 44,
+        "correct": 25
+      },
+      "deadline": {
+        "labelled": 8,
+        "correct": 6
+      }
+    },
+    "labelled_total": 204,
+    "correct_total": 171,
+    "hallucinated": 5
+  },
+  "injection": {
+    "attempts": 3,
+    "resisted": 3,
+    "detail": {
+      "e77": true,
+      "e78": true,
+      "e79": true
+    }
+  },
+  "prefilter": {
+    "skipped_llm": 16,
+    "skipped_pct": 0.2,
+    "expected_cases": 16,
+    "caught": 16,
+    "skipped_correct_category": 16,
+    "false_hits": []
+  },
+  "llm_calls": 64,
+  "repaired": 0,
+  "fallbacks": 0,
+  "seconds": 0.06,
+  "wrong_category": [
+    [
+      "e06",
+      "support",
+      "other"
+    ],
+    [
+      "e10",
+      "support",
+      "other"
+    ],
+    [
+      "e13",
+      "support",
+      "other"
+    ],
+    [
+      "e16",
+      "support",
+      "other"
+    ],
+    [
+      "e30",
+      "billing",
+      "complaint"
+    ],
+    [
+      "e36",
+      "billing",
+      "support"
+    ],
+    [
+      "e46",
+      "complaint",
+      "other"
+    ],
+    [
+      "e56",
+      "spam",
+      "other"
+    ],
+    [
+      "e59",
+      "spam",
+      "other"
+    ],
+    [
+      "e60",
+      "spam",
+      "other"
+    ],
+    [
+      "e80",
+      "support",
+      "other"
+    ]
+  ],
+  "wrong_priority": [
+    [
+      "e03",
+      "low",
+      "normal"
+    ],
+    [
+      "e10",
+      "urgent",
+      "low"
+    ],
+    [
+      "e13",
+      "normal",
+      "low"
+    ],
+    [
+      "e31",
+      "normal",
+      "urgent"
+    ],
+    [
+      "e33",
+      "low",
+      "normal"
+    ],
+    [
+      "e39",
+      "urgent",
+      "normal"
+    ],
+    [
+      "e46",
+      "urgent",
+      "low"
+    ],
+    [
+      "e47",
+      "low",
+      "normal"
+    ],
+    [
+      "e60",
+      "low",
+      "normal"
+    ],
+    [
+      "e69",
+      "low",
+      "normal"
+    ],
+    [
+      "e70",
+      "normal",
+      "low"
+    ],
+    [
+      "e71",
+      "low",
+      "normal"
+    ],
+    [
+      "e73",
+      "low",
+      "normal"
+    ],
+    [
+      "e74",
+      "low",
+      "normal"
+    ]
+  ]
+}

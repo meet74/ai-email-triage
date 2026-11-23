@@ -1,0 +1,772 @@
+[
+  {
+    "id": "e01",
+    "from": "Dana Ortiz <dana.ortiz@example.com>",
+    "subject": "Where is my order NB-10482?",
+    "triage": {
+      "category": "support",
+      "priority": "normal",
+      "sentiment": "positive",
+      "language": "en",
+      "summary": "Customer needs help with an order or product (NB-10482, Ridgeline 2P Tent) - asks for: order status",
+      "extracted": {
+        "name": "Dana Ortiz",
+        "company": null,
+        "order_id": "NB-10482",
+        "invoice_number": null,
+        "product": "Ridgeline 2P Tent",
+        "requested_action": "order_status",
+        "deadline": null
+      },
+      "draft_reply": "Hello Dana,\n\nThank you for getting in touch about order NB-10482. I have passed your message to our team and someone will look into it and reply to you personally.\n\nKind regards,\nNorthbeam Outdoor Gear Support",
+      "confidence": 0.92,
+      "reasons": [
+        "support wording: where is my order, tracking, order"
+      ],
+      "meta": {
+        "source": "llm",
+        "model": "mock:heuristic-v1",
+        "skip_reason": null,
+        "injection_suspected": false,
+        "draft_replaced": false,
+        "repaired": false,
+        "degraded": false,
+        "latency_ms": 1
+      }
+    },
+    "slack": {
+      "text": "support email from Dana Ortiz &lt;dana.ortiz@example.com&gt;: Customer needs help with an order or product (NB-10482, Ridgeline 2P Tent) - asks for: order status",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "support email"
+          }
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*From*\nDana Ortiz &lt;dana.ortiz@example.com&gt;"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Subject*\nWhere is my order NB-10482?"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Priority*\nnormal"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Sentiment / language*\npositive / en"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Summary*\nCustomer needs help with an order or product (NB-10482, Ridgeline 2P Tent) - asks for: order status"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Extracted*\n*Name:* Dana Ortiz\n*Order:* NB-10482\n*Product:* Ridgeline 2P Tent\n*Wants:* order status"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Draft reply*\n> Hello Dana,\n> \n> Thank you for getting in touch about order NB-10482. I have passed your message to our team and someone will look into it and reply to you personally.\n> \n> Kind regards,\n> Northbeam Outdoor Gear Support"
+          }
+        },
+        {
+          "type": "actions",
+          "block_id": "ticket_T-DEMO-e01",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Approve and send"
+              },
+              "style": "primary",
+              "action_id": "approve_reply",
+              "value": "T-DEMO-e01",
+              "confirm": {
+                "title": {
+                  "type": "plain_text",
+                  "text": "Send this reply?"
+                },
+                "text": {
+                  "type": "plain_text",
+                  "text": "The draft is emailed to the customer as it is."
+                },
+                "confirm": {
+                  "type": "plain_text",
+                  "text": "Send"
+                },
+                "deny": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Edit"
+              },
+              "action_id": "edit_reply",
+              "value": "T-DEMO-e01"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Reject"
+              },
+              "style": "danger",
+              "action_id": "reject_reply",
+              "value": "T-DEMO-e01"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "Ticket T-DEMO-e01. Nothing is sent until someone presses Approve or sends from Edit."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "e07",
+    "from": "Hannah Cole <hannah.cole@example.com>",
+    "subject": "Stove leaking fuel",
+    "triage": {
+      "category": "support",
+      "priority": "urgent",
+      "sentiment": "negative",
+      "language": "en",
+      "summary": "Customer needs help with an order or product (NB-10733, Cascade Stove)",
+      "extracted": {
+        "name": "Hannah Cole",
+        "company": null,
+        "order_id": "NB-10733",
+        "invoice_number": null,
+        "product": "Cascade Stove",
+        "requested_action": null,
+        "deadline": null
+      },
+      "draft_reply": "Hello Hannah,\n\nThank you for getting in touch about order NB-10733. I have passed your message to our team and someone will look into it and reply to you personally. Please stop using the item until we have spoken.\n\nKind regards,\nNorthbeam Outdoor Gear Support",
+      "confidence": 0.66,
+      "reasons": [
+        "support wording: leak, order",
+        "urgent wording: leaking fuel, dangerous, danger"
+      ],
+      "meta": {
+        "source": "llm",
+        "model": "mock:heuristic-v1",
+        "skip_reason": null,
+        "injection_suspected": false,
+        "draft_replaced": false,
+        "repaired": false,
+        "degraded": false,
+        "latency_ms": 1
+      }
+    },
+    "slack": {
+      "text": "URGENT support email from Hannah Cole &lt;hannah.cole@example.com&gt;: Customer needs help with an order or product (NB-10733, Cascade Stove)",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "URGENT: support email"
+          }
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*From*\nHannah Cole &lt;hannah.cole@example.com&gt;"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Subject*\nStove leaking fuel"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Priority*\nurgent"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Sentiment / language*\nnegative / en"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Summary*\nCustomer needs help with an order or product (NB-10733, Cascade Stove)"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Extracted*\n*Name:* Hannah Cole\n*Order:* NB-10733\n*Product:* Cascade Stove"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Draft reply*\n> Hello Hannah,\n> \n> Thank you for getting in touch about order NB-10733. I have passed your message to our team and someone will look into it and reply to you personally. Please stop using the item until we have spoken.\n> \n> Kind regards,\n> Northbeam Outdoor Gear Support"
+          }
+        },
+        {
+          "type": "actions",
+          "block_id": "ticket_T-DEMO-e07",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Approve and send"
+              },
+              "style": "primary",
+              "action_id": "approve_reply",
+              "value": "T-DEMO-e07",
+              "confirm": {
+                "title": {
+                  "type": "plain_text",
+                  "text": "Send this reply?"
+                },
+                "text": {
+                  "type": "plain_text",
+                  "text": "The draft is emailed to the customer as it is."
+                },
+                "confirm": {
+                  "type": "plain_text",
+                  "text": "Send"
+                },
+                "deny": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Edit"
+              },
+              "action_id": "edit_reply",
+              "value": "T-DEMO-e07"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Reject"
+              },
+              "style": "danger",
+              "action_id": "reject_reply",
+              "value": "T-DEMO-e07"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "Ticket T-DEMO-e07. Nothing is sent until someone presses Approve or sends from Edit."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "e30",
+    "from": "Julia Brandt <julia.brandt@example.com>",
+    "subject": "Chargeback if not resolved",
+    "triage": {
+      "category": "complaint",
+      "priority": "urgent",
+      "sentiment": "neutral",
+      "language": "en",
+      "summary": "Unhappy customer raising a complaint (NB-10555) - asks for: refund",
+      "extracted": {
+        "name": "Julia Brandt",
+        "company": null,
+        "order_id": "NB-10555",
+        "invoice_number": null,
+        "product": null,
+        "requested_action": "refund",
+        "deadline": null
+      },
+      "draft_reply": "Hello Julia,\n\nI am sorry things have not gone the way they should. I have passed your message to a senior member of our team, who will review it and reply to you personally.\n\nKind regards,\nNorthbeam Outdoor Gear Support",
+      "confidence": 0.59,
+      "reasons": [
+        "complaint wording: chargeback",
+        "urgent wording: chargeback"
+      ],
+      "meta": {
+        "source": "llm",
+        "model": "mock:heuristic-v1",
+        "skip_reason": null,
+        "injection_suspected": false,
+        "draft_replaced": false,
+        "repaired": false,
+        "degraded": false,
+        "latency_ms": 0
+      }
+    },
+    "slack": {
+      "text": "URGENT complaint email from Julia Brandt &lt;julia.brandt@example.com&gt;: Unhappy customer raising a complaint (NB-10555) - asks for: refund",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "URGENT: complaint email"
+          }
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*From*\nJulia Brandt &lt;julia.brandt@example.com&gt;"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Subject*\nChargeback if not resolved"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Priority*\nurgent"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Sentiment / language*\nneutral / en"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Summary*\nUnhappy customer raising a complaint (NB-10555) - asks for: refund"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Extracted*\n*Name:* Julia Brandt\n*Order:* NB-10555\n*Wants:* refund"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Draft reply*\n> Hello Julia,\n> \n> I am sorry things have not gone the way they should. I have passed your message to a senior member of our team, who will review it and reply to you personally.\n> \n> Kind regards,\n> Northbeam Outdoor Gear Support"
+          }
+        },
+        {
+          "type": "actions",
+          "block_id": "ticket_T-DEMO-e30",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Approve and send"
+              },
+              "style": "primary",
+              "action_id": "approve_reply",
+              "value": "T-DEMO-e30",
+              "confirm": {
+                "title": {
+                  "type": "plain_text",
+                  "text": "Send this reply?"
+                },
+                "text": {
+                  "type": "plain_text",
+                  "text": "The draft is emailed to the customer as it is."
+                },
+                "confirm": {
+                  "type": "plain_text",
+                  "text": "Send"
+                },
+                "deny": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Edit"
+              },
+              "action_id": "edit_reply",
+              "value": "T-DEMO-e30"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Reject"
+              },
+              "style": "danger",
+              "action_id": "reject_reply",
+              "value": "T-DEMO-e30"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "Ticket T-DEMO-e30. Nothing is sent until someone presses Approve or sends from Edit."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "e23",
+    "from": "Sofia Marin <sofia.marin@example.com>",
+    "subject": "Presupuesto para campamento escolar",
+    "triage": {
+      "category": "sales_lead",
+      "priority": "normal",
+      "sentiment": "neutral",
+      "language": "es",
+      "summary": "Business enquiry about buying or partnering (Ridgeline 2P Tent) - asks for: quote",
+      "extracted": {
+        "name": "Sofia Marin",
+        "company": null,
+        "order_id": null,
+        "invoice_number": null,
+        "product": "Ridgeline 2P Tent",
+        "requested_action": "quote",
+        "deadline": null
+      },
+      "draft_reply": "Hola Sofia,\n\nGracias por su interés en Northbeam Outdoor Gear. He pasado su consulta a nuestro equipo comercial, que le responderá personalmente. Para ayudar a nuestro equipo, ¿podría indicarnos qué productos y cantidades necesita y para cuándo?\n\nSaludos cordiales,\nNorthbeam Outdoor Gear Support",
+      "confidence": 0.7,
+      "reasons": [
+        "sales_lead wording: presupuesto"
+      ],
+      "meta": {
+        "source": "llm",
+        "model": "mock:heuristic-v1",
+        "skip_reason": null,
+        "injection_suspected": false,
+        "draft_replaced": false,
+        "repaired": false,
+        "degraded": false,
+        "latency_ms": 0
+      }
+    },
+    "slack": {
+      "text": "sales_lead email from Sofia Marin &lt;sofia.marin@example.com&gt;: Business enquiry about buying or partnering (Ridgeline 2P Tent) - asks for: quote",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "sales lead email"
+          }
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*From*\nSofia Marin &lt;sofia.marin@example.com&gt;"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Subject*\nPresupuesto para campamento escolar"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Priority*\nnormal"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Sentiment / language*\nneutral / es"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Summary*\nBusiness enquiry about buying or partnering (Ridgeline 2P Tent) - asks for: quote"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Extracted*\n*Name:* Sofia Marin\n*Product:* Ridgeline 2P Tent\n*Wants:* quote"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Draft reply*\n> Hola Sofia,\n> \n> Gracias por su interés en Northbeam Outdoor Gear. He pasado su consulta a nuestro equipo comercial, que le responderá personalmente. Para ayudar a nuestro equipo, ¿podría indicarnos qué productos y cantidades necesita y para cuándo?\n> \n> Saludos cordiales,\n> Northbeam Outdoor Gear Support"
+          }
+        },
+        {
+          "type": "actions",
+          "block_id": "ticket_T-DEMO-e23",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Approve and send"
+              },
+              "style": "primary",
+              "action_id": "approve_reply",
+              "value": "T-DEMO-e23",
+              "confirm": {
+                "title": {
+                  "type": "plain_text",
+                  "text": "Send this reply?"
+                },
+                "text": {
+                  "type": "plain_text",
+                  "text": "The draft is emailed to the customer as it is."
+                },
+                "confirm": {
+                  "type": "plain_text",
+                  "text": "Send"
+                },
+                "deny": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Edit"
+              },
+              "action_id": "edit_reply",
+              "value": "T-DEMO-e23"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Reject"
+              },
+              "style": "danger",
+              "action_id": "reject_reply",
+              "value": "T-DEMO-e23"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "Ticket T-DEMO-e23. Nothing is sent until someone presses Approve or sends from Edit."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "e77",
+    "from": "Walter Pike <walter.pike@example.com>",
+    "subject": "Broken buckle on TrailPack",
+    "triage": {
+      "category": "support",
+      "priority": "normal",
+      "sentiment": "negative",
+      "language": "en",
+      "summary": "Customer needs help with an order or product (NB-10760, TrailPack 55L) - asks for: replacement",
+      "extracted": {
+        "name": "Walter Pike",
+        "company": null,
+        "order_id": "NB-10760",
+        "invoice_number": null,
+        "product": "TrailPack 55L",
+        "requested_action": "replacement",
+        "deadline": null
+      },
+      "draft_reply": "Hello Walter,\n\nThank you for writing to us. We have received your message and a member of our team will review it and reply personally. If you have an order number, please include it so we can find your order quickly.\n\nKind regards,\nNorthbeam Outdoor Gear Support",
+      "confidence": 0.92,
+      "reasons": [
+        "support wording: broken, replacement, replace",
+        "email contained instructions aimed at the assistant; they were removed and the draft was replaced"
+      ],
+      "meta": {
+        "source": "llm",
+        "model": "mock:heuristic-v1",
+        "skip_reason": null,
+        "injection_suspected": true,
+        "draft_replaced": true,
+        "repaired": false,
+        "degraded": false,
+        "latency_ms": 0
+      }
+    },
+    "slack": {
+      "text": "support email from Walter Pike &lt;walter.pike@example.com&gt;: Customer needs help with an order or product (NB-10760, TrailPack 55L) - asks for: replacement",
+      "blocks": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "support email"
+          }
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*From*\nWalter Pike &lt;walter.pike@example.com&gt;"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Subject*\nBroken buckle on TrailPack"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Priority*\nnormal"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Sentiment / language*\nnegative / en"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Summary*\nCustomer needs help with an order or product (NB-10760, TrailPack 55L) - asks for: replacement"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Extracted*\n*Name:* Walter Pike\n*Order:* NB-10760\n*Product:* TrailPack 55L\n*Wants:* replacement"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Check before approving*\n- The email contained text aimed at the AI. It was ignored and the draft was replaced with a neutral one. Read the original before approving."
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Draft reply*\n> Hello Walter,\n> \n> Thank you for writing to us. We have received your message and a member of our team will review it and reply personally. If you have an order number, please include it so we can find your order quickly.\n> \n> Kind regards,\n> Northbeam Outdoor Gear Support"
+          }
+        },
+        {
+          "type": "actions",
+          "block_id": "ticket_T-DEMO-e77",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Approve and send"
+              },
+              "style": "primary",
+              "action_id": "approve_reply",
+              "value": "T-DEMO-e77",
+              "confirm": {
+                "title": {
+                  "type": "plain_text",
+                  "text": "Send this reply?"
+                },
+                "text": {
+                  "type": "plain_text",
+                  "text": "The draft is emailed to the customer as it is."
+                },
+                "confirm": {
+                  "type": "plain_text",
+                  "text": "Send"
+                },
+                "deny": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Edit"
+              },
+              "action_id": "edit_reply",
+              "value": "T-DEMO-e77"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Reject"
+              },
+              "style": "danger",
+              "action_id": "reject_reply",
+              "value": "T-DEMO-e77"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "Ticket T-DEMO-e77. Nothing is sent until someone presses Approve or sends from Edit."
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

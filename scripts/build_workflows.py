@@ -343,9 +343,9 @@ def approval_handler(test=False):
     f.link(pending, route, out=0)
 
     # already handled
-    can = if_node(f, "Can answer in Slack?", (1650, 520), cond("={{ $('Parse interaction').item.json.response_url }}", "notEmpty"))
+    can = if_node(f, "Can answer in Slack?", (1650, 700), cond("={{ $('Parse interaction').item.json.response_url }}", "notEmpty"))
     f.link(pending, can, out=1)
-    note = http(f, "Tell Slack: already handled", (1900, 520), "={{ $('Parse interaction').item.json.response_url }}",
+    note = http(f, "Tell Slack: already handled", (1900, 700), "={{ $('Parse interaction').item.json.response_url }}",
                 "={{ JSON.stringify({ response_type: 'ephemeral', replace_original: false, text: 'This ticket was already handled (status: ' + ($('Look up ticket').item.json.status || 'unknown') + '). Nothing was sent.' }) }}")
     f.link(can, note, out=0)
 

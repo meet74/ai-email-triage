@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - run: node --test tests/js/code_nodes.test.mjs
+      - run: python -m eval.run_eval --only mock
+      - name: Workflow JSON is up to date
+        run: |
+          python scripts/build_workflows.py
+          git diff --exit-code workflows

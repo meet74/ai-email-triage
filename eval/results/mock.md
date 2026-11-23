@@ -1,6 +1,6 @@
 ### mock: `mock:heuristic-v1`
 
-80 emails scored (0 errors), 64 model calls, 0.06s.
+80 emails scored (0 errors), 64 model calls, 0.03s.
 
 | Metric | Result |
 |---|---|
@@ -9,7 +9,7 @@
 | Urgent recall / precision | 6/9 found, 6/7 correct when flagged |
 | Language accuracy | 100.0% |
 | Extraction (labelled values found) | 171/204 (83.8%); 5 values filled where none was labelled |
-| Injection resistance | 3/3 attempts |
+| Injection resistance | 3/3 attempts (2 flagged by the input guard) |
 | Skipped the model (pre-filter) | 16/80 (20.0%) |
 | Pre-filter: expected cases caught | 16/16; 16/16 skipped emails had the right category; false hits: none |
 

@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>Approval message (rendering)</title>
+<style>
+body{margin:0;background:#eef1f5;font:15px/1.45 Helvetica,Arial,sans-serif;color:#1d2530;padding:28px}
+.note{font-size:12px;color:#5b6675;margin-bottom:10px}
+.card{background:#fff;border:1px solid #d5dbe3;border-left:4px solid #2ec4b6;border-radius:6px;padding:16px 20px}
+.meta{font-size:13px;color:#5b6675;margin-bottom:8px}
+h2{margin:0 0 10px;font-size:18px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-bottom:10px}
+.sec{margin:10px 0}
+blockquote{margin:6px 0;padding-left:12px;border-left:3px solid #c8d0da;color:#33404f}
+.actions{margin-top:14px;display:flex;gap:8px}
+.btn{border:1px solid #b9c2cd;border-radius:5px;padding:6px 14px;font-weight:600;background:#fff}
+.btn.primary{background:#0d7a70;color:#fff;border-color:#0d7a70}
+.btn.danger{color:#b3261e;border-color:#b3261e}
+.ctx{margin-top:12px;font-size:12px;color:#5b6675}
+</style>
+<div class="note">Rendering of the Block Kit payload produced by <code>make demo</code> (email e30). Not a screenshot of Slack.</div>
+<div class="card"><div class="meta">#urgent &middot; posted by the triage workflow</div>
+<h2>URGENT: complaint email</h2>
+<div class="fields"><div><b>From</b><br>Julia Brandt &lt;julia.brandt@example.com&gt;<br></div><div><b>Subject</b><br>Chargeback if not resolved<br></div><div><b>Priority</b><br>urgent<br></div><div><b>Sentiment / language</b><br>neutral / en<br></div></div>
+<div class="sec"><b>Summary</b><br>Unhappy customer raising a complaint (NB-10555) - asks for: refund<br></div>
+<div class="sec"><b>Extracted</b><br><b>Name:</b> Julia Brandt<br><b>Order:</b> NB-10555<br><b>Wants:</b> refund<br></div>
+<div class="sec"><b>Draft reply</b><br><blockquote>Hello Julia,<br><br>I am sorry things have not gone the way they should. I have passed your message to a senior member of our team, who will review it and reply to you personally.<br><br>Kind regards,<br>Northbeam Outdoor Gear Support</blockquote></div>
+<div class="actions"><span class="btn primary">Approve and send</span><span class="btn ">Edit</span><span class="btn danger">Reject</span></div>
+<div class="ctx">Ticket T-DEMO-e30. Nothing is sent until someone presses Approve or sends from Edit.<br></div>
+</div>

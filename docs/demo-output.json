@@ -31,10 +31,11 @@
         "draft_replaced": false,
         "repaired": false,
         "degraded": false,
-        "latency_ms": 1
+        "latency_ms": 4
       }
     },
     "slack": {
+      "channel": "",
       "text": "support email from Dana Ortiz &lt;dana.ortiz@example.com&gt;: Customer needs help with an order or product (NB-10482, Ridgeline 2P Tent) - asks for: order status",
       "blocks": [
         {
@@ -188,6 +189,7 @@
       }
     },
     "slack": {
+      "channel": "",
       "text": "URGENT support email from Hannah Cole &lt;hannah.cole@example.com&gt;: Customer needs help with an order or product (NB-10733, Cascade Stove)",
       "blocks": [
         {
@@ -341,6 +343,7 @@
       }
     },
     "slack": {
+      "channel": "",
       "text": "URGENT complaint email from Julia Brandt &lt;julia.brandt@example.com&gt;: Unhappy customer raising a complaint (NB-10555) - asks for: refund",
       "blocks": [
         {
@@ -493,6 +496,7 @@
       }
     },
     "slack": {
+      "channel": "",
       "text": "sales_lead email from Sofia Marin &lt;sofia.marin@example.com&gt;: Business enquiry about buying or partnering (Ridgeline 2P Tent) - asks for: quote",
       "blocks": [
         {
@@ -646,6 +650,7 @@
       }
     },
     "slack": {
+      "channel": "",
       "text": "support email from Walter Pike &lt;walter.pike@example.com&gt;: Customer needs help with an order or product (NB-10760, TrailPack 55L) - asks for: replacement",
       "blocks": [
         {

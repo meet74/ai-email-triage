@@ -1,0 +1,42 @@
+<!doctype html><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;width:1600px;height:1200px;background:#0d1b2a;color:#e8eef5;font-family:Inter,Helvetica,Arial,sans-serif;position:relative;overflow:hidden}
+.left{position:absolute;left:90px;top:230px;width:640px}
+h1{font-size:78px;line-height:1.02;margin:0 0 26px;letter-spacing:-1px}
+h1 span{color:#2ec4b6}
+p.v{font-size:27px;line-height:1.4;color:#b8c7d9;margin:0 0 44px}
+.tiles{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.tile{background:#13273b;border:1px solid #21405c;border-radius:12px;padding:18px 24px;display:flex;align-items:baseline;gap:20px}
+.tile b{font-size:48px;color:#2ec4b6;min-width:130px}
+.tile div{font-size:20px;color:#b8c7d9}
+.chips span{display:inline-block;margin:0 10px 10px 0;padding:8px 16px;border:1px solid #2ec4b6;border-radius:20px;color:#2ec4b6;font-size:18px}
+.right{position:absolute;left:800px;top:200px;width:720px}
+.msg{background:#fff;color:#1d2530;border-radius:10px;border-left:6px solid #2ec4b6;padding:22px 26px;font-size:19px;line-height:1.45}
+.msg h3{margin:0 0 10px;font-size:23px}
+.msg .q{border-left:3px solid #c8d0da;padding-left:12px;margin:8px 0;color:#33404f}
+.btns{margin-top:14px;display:flex;gap:10px}
+.btns i{font-style:normal;font-weight:700;border:1px solid #b9c2cd;border-radius:6px;padding:7px 16px}
+.btns i.p{background:#0d7a70;color:#fff;border-color:#0d7a70}
+.btns i.d{color:#b3261e;border-color:#b3261e}
+table{width:100%;margin-top:28px;border-collapse:collapse;background:#13273b;border-radius:10px;overflow:hidden;font-size:17px}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid #21405c}
+th{color:#2ec4b6;font-weight:600;background:#10243a}
+.u{color:#ff8a80;font-weight:700}
+</style>
+<div class="left"><h1>AI Email <span>Triage</span></h1>
+<p class="v">Every email to the shared inbox is classified, ticketed and answered with a draft. A person approves in Slack. Nothing is sent without that click.</p>
+<div class="tiles">
+<div class="tile"><b>86%</b><div>category accuracy on 80 labelled emails (mock model)</div></div>
+<div class="tile"><b>20%</b><div>of emails settled by rules, no model call</div></div>
+<div class="tile"><b>47/47</b><div>end-to-end checks passed in a local n8n</div></div></div>
+<div class="chips"><span>n8n</span><span>FastAPI</span><span>Claude API</span><span>Slack</span><span>Gmail</span><span>Google Sheets</span></div></div>
+<div class="right"><div class="msg"><h3>URGENT: complaint email</h3>
+<b>From</b> Julia Brandt &lt;julia.brandt@example.com&gt;<br><b>Subject</b> Chargeback if not resolved<br><b>Order</b> NB-10555 &middot; <b>Wants</b> refund
+<div class="q">Hello Julia,<br>I am sorry things have not gone the way they should. I have passed your message to a senior member of our team, who will review it and reply to you personally.</div>
+<div class="btns"><i class="p">Approve and send</i><i>Edit</i><i class="d">Reject</i></div></div>
+<table><tr><th>Ticket</th><th>Category</th><th>Priority</th><th>Status</th></tr>
+<tr><td>T-0412</td><td>support</td><td>normal</td><td>pending_approval</td></tr>
+<tr><td>T-0413</td><td>billing</td><td class="u">urgent</td><td>pending_approval</td></tr>
+<tr><td>T-0414</td><td>spam</td><td>low</td><td>filtered_newsletter</td></tr>
+<tr><td>T-0415</td><td>sales_lead</td><td>normal</td><td>sent</td></tr>
+<tr><td>T-0416</td><td>complaint</td><td>normal</td><td>rejected</td></tr></table></div>

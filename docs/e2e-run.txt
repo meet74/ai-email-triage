@@ -1,0 +1,59 @@
+n8n 2.48.7, node /opt/node24/bin
+Importing and publishing the test variants
+  PASS  import daily-digest.test.json
+  PASS  publish Daily digest (test)
+  PASS  import error-alerts.test.json
+  PASS  publish Error alerts (test)
+  PASS  import inbox-triage.test.json
+  PASS  publish Inbox triage (test)
+  PASS  import slack-approval-handler.test.json
+  PASS  publish Slack approval handler (test)
+  PASS  n8n is up
+  PASS  triage service is up (mock model)
+  PASS  webhooks registered
+
+Inbox triage
+  PASS  normal support email: webhook returns 200
+  PASS  ticket row saved with status pending_approval
+  PASS  one Slack approval message, with the support channel
+  PASS  message has Approve, Edit and Reject buttons
+  PASS  Gmail label applied
+  PASS  nothing was sent to the customer
+  PASS  no SMS for a normal email
+  PASS  urgent chargeback threat: @here alert posted
+  PASS  urgent: approval message also goes to the urgent channel
+  PASS  urgent: SMS-ready webhook called with <=160 chars
+  PASS  newsletter: ticketed as filtered
+  PASS  newsletter: no Slack message, label still applied
+  PASS  auto-reply: filtered, no Slack message
+  PASS  prompt injection email: draft replaced, warning shown, no refund promise
+
+Slack approval handler
+  PASS  wrong signature gets 401
+  PASS  stale timestamp gets 401
+  PASS  rejected requests sent nothing
+  PASS  valid Approve is acknowledged with 200
+  PASS  Approve sends exactly the stored draft as a reply in the thread
+  PASS  ticket marked sent with approver
+  PASS  original Slack message updated
+  PASS  second click does not send again
+  PASS  second click is answered with 'already handled'
+  PASS  Reject marks the ticket rejected
+  PASS  Reject sends nothing
+  PASS  Edit opens a modal prefilled with the draft
+  PASS  Edit alone sends nothing
+  PASS  modal submit acknowledged with 200
+  PASS  modal submit sends the edited text
+  PASS  ticket marked sent_edited
+
+Daily digest
+  PASS  digest posted to Slack
+  PASS  digest counts 3 tickets for the day
+  PASS  digest lists both unanswered urgent tickets (T-1 and the older T-4)
+
+Error alerts
+  PASS  failure in the triage flow raises an alert
+  PASS  alert names the workflow and the failed node
+  PASS  alert carries an execution link
+
+ALL CHECKS PASSED

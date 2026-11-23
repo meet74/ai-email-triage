@@ -9,6 +9,7 @@ setup:
 
 test:
 	$(PY) -m pytest -q
+	node --test tests/js/code_nodes.test.mjs
 
 demo:
 	PYTHONWARNINGS=ignore $(PY) scripts/demo.py

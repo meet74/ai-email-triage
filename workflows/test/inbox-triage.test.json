@@ -40,7 +40,7 @@
             {
               "id": "eab01ca2-431d-59f0-b623-3b6261ff32ea",
               "name": "triage_url",
-              "value": "http://127.0.0.1:8765",
+              "value": "http://127.0.0.1:18765",
               "type": "string"
             },
             {
@@ -88,7 +88,7 @@
             {
               "id": "1d809c1c-0a0d-5567-adb4-f05a1b12de65",
               "name": "sms_webhook_url",
-              "value": "http://127.0.0.1:8770/sms",
+              "value": "http://127.0.0.1:18770/sms",
               "type": "string"
             },
             {
@@ -174,7 +174,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/sheets/append",
+        "url": "=http://127.0.0.1:18770/sheets/append",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json) }}",
@@ -309,7 +309,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/gmail/labels",
+        "url": "=http://127.0.0.1:18770/gmail/labels",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({message_id: $('Build ticket').item.json.message_id, label_id: $('Build ticket').item.json.label_id, category: $('Build ticket').item.json.category}) }}",
@@ -348,7 +348,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "url": "=http://127.0.0.1:18770/slack/chat.postMessage",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json) }}",
@@ -482,7 +482,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "url": "=http://127.0.0.1:18770/slack/chat.postMessage",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({channel: $('Settings').first().json.channel_urgent, text: $json.slack_text}) }}",

@@ -26,7 +26,7 @@
             {
               "id": "03086a2a-2b4a-5f48-896f-20787473b264",
               "name": "triage_url",
-              "value": "http://127.0.0.1:8765",
+              "value": "http://127.0.0.1:18765",
               "type": "string"
             },
             {
@@ -69,7 +69,7 @@
             {
               "id": "ecdcb62f-a8dd-5f42-95f6-72b0b59bade0",
               "name": "date",
-              "value": "='2026-11-21'",
+              "value": "2026-11-21",
               "type": "string"
             }
           ]
@@ -88,7 +88,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "=http://127.0.0.1:8770/sheets/all",
+        "url": "=http://127.0.0.1:18770/sheets/all",
         "options": {}
       },
       "id": "7f9e0afb-474f-5a9e-a6e0-efb9ded9e4fe",
@@ -139,7 +139,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "url": "=http://127.0.0.1:18770/slack/chat.postMessage",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({channel: 'digest', text: $json.text, blocks: $json.blocks}) }}",

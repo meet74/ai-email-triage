@@ -26,7 +26,9 @@ if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return fail('signatu
 
 let payload;
 try {
-  payload = JSON.parse(new URLSearchParams(raw).get('payload'));
+  // form body is payload=<urlencoded JSON>; decoded by hand because the sandbox has no URLSearchParams
+  const field = raw.split('&').find((p) => p.startsWith('payload='));
+  payload = JSON.parse(decodeURIComponent(field.slice('payload='.length).replace(/\+/g, ' ')));
 } catch (e) {
   return fail('payload is not valid JSON');
 }

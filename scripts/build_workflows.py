@@ -28,8 +28,8 @@ CRED = {
     "service": ("httpHeaderAuth", "Triage service API key"),
 }
 
-FAKE = "http://127.0.0.1:8770"
-SERVICE_TEST = "http://127.0.0.1:8765"
+FAKE = "http://127.0.0.1:18770"
+SERVICE_TEST = "http://127.0.0.1:18765"
 
 
 def code(name):
@@ -417,7 +417,7 @@ def daily_digest(test=False):
                      {"rule": {"interval": [{"field": "days", "triggerAtHour": 8}]}}, (0, 0),
                      notes="Uses the workflow time zone (Settings > Timezone).")
     st = settings_node(f, (220, 0), cfg)
-    day_expr = "='2026-11-21'" if test else "={{ $now.minus({ days: 1 }).toFormat('yyyy-LL-dd') }}"
+    day_expr = "2026-11-21" if test else "={{ $now.minus({ days: 1 }).toFormat('yyyy-LL-dd') }}"
     day = f.add("Pick yesterday", "n8n-nodes-base.set", 3.4, {"assignments": {"assignments": [
         {"id": str(uuid.uuid5(NS, "digest/date")), "name": "date", "value": day_expr, "type": "string"}]}, "options": {}}, (440, 0))
     rows = sheets_read_all(f, "Read all tickets", (660, 0))

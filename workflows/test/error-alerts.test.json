@@ -41,7 +41,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/slack/chat.postMessage",
+        "url": "=http://127.0.0.1:18770/slack/chat.postMessage",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({channel: $('Settings').first().json.alert_channel, text: 'Workflow failed: ' + $('Error Trigger').item.json.workflow.name + '. Node: ' + ($('Error Trigger').item.json.execution.lastNodeExecuted || 'unknown') + '. Error: ' + ($('Error Trigger').item.json.execution.error.message || 'no message') + '. Execution: ' + ($('Error Trigger').item.json.execution.url || 'n/a')}) }}",

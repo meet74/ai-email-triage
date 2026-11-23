@@ -2,7 +2,7 @@
 n8n workflows end to end on a laptop. Everything is kept in memory and every
 request is recorded so a test can assert on what the workflow tried to do.
 
-    python scripts/fake_services.py        # listens on 127.0.0.1:8770
+    python scripts/fake_services.py        # listens on 127.0.0.1:18770
 """
 
 import json
@@ -83,14 +83,14 @@ class Handler(BaseHTTPRequestHandler):
         self._json({"error": "not found"}, 404)
 
 
-def serve(port=8770):
+def serve(port=18770):
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     return srv
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8770
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 18770
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     print(f"fake services on :{port}")
     srv.serve_forever()

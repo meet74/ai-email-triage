@@ -25,7 +25,7 @@
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// Slack request signing, v0 scheme. Runs before anything else in the handler.\n// Needs NODE_FUNCTION_ALLOW_BUILTIN=crypto and SLACK_SIGNING_SECRET in n8n's environment,\n// plus N8N_BLOCK_ENV_ACCESS_IN_NODE=false so the secret can be read here.\nconst crypto = require('crypto');\nconst MAX_AGE_SECONDS = 300;\n\nconst item = $input.first();\nconst headers = item.json.headers || {};\nconst timestamp = headers['x-slack-request-timestamp'] || '';\nconst signature = headers['x-slack-signature'] || '';\nconst secret = $env.SLACK_SIGNING_SECRET || '';\n\nconst fail = (reason) => [{ json: { valid: false, reason } }];\nif (!secret) return fail('SLACK_SIGNING_SECRET is not set');\nif (!timestamp || !signature) return fail('missing signature headers');\nif (!/^\\d+$/.test(timestamp)) return fail('bad timestamp');\nconst now = $now ? Math.floor($now.toSeconds()) : Math.floor(Date.now() / 1000);\nif (Math.abs(now - Number(timestamp)) > MAX_AGE_SECONDS) return fail('stale timestamp');\n\n// The signature covers the exact bytes Slack sent, so use the raw body, not the parsed one.\nconst raw = (await this.helpers.getBinaryDataBuffer(0, 'data')).toString('utf8');\nconst expected = 'v0=' + crypto.createHmac('sha256', secret).update(`v0:${timestamp}:${raw}`).digest('hex');\nconst a = Buffer.from(expected);\nconst b = Buffer.from(signature);\nif (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return fail('signature mismatch');\n\nlet payload;\ntry {\n  payload = JSON.parse(new URLSearchParams(raw).get('payload'));\n} catch (e) {\n  return fail('payload is not valid JSON');\n}\nreturn [{ json: { valid: true, payload } }];\n"
+        "jsCode": "// Slack request signing, v0 scheme. Runs before anything else in the handler.\n// Needs NODE_FUNCTION_ALLOW_BUILTIN=crypto and SLACK_SIGNING_SECRET in n8n's environment,\n// plus N8N_BLOCK_ENV_ACCESS_IN_NODE=false so the secret can be read here.\nconst crypto = require('crypto');\nconst MAX_AGE_SECONDS = 300;\n\nconst item = $input.first();\nconst headers = item.json.headers || {};\nconst timestamp = headers['x-slack-request-timestamp'] || '';\nconst signature = headers['x-slack-signature'] || '';\nconst secret = $env.SLACK_SIGNING_SECRET || '';\n\nconst fail = (reason) => [{ json: { valid: false, reason } }];\nif (!secret) return fail('SLACK_SIGNING_SECRET is not set');\nif (!timestamp || !signature) return fail('missing signature headers');\nif (!/^\\d+$/.test(timestamp)) return fail('bad timestamp');\nconst now = $now ? Math.floor($now.toSeconds()) : Math.floor(Date.now() / 1000);\nif (Math.abs(now - Number(timestamp)) > MAX_AGE_SECONDS) return fail('stale timestamp');\n\n// The signature covers the exact bytes Slack sent, so use the raw body, not the parsed one.\nconst raw = (await this.helpers.getBinaryDataBuffer(0, 'data')).toString('utf8');\nconst expected = 'v0=' + crypto.createHmac('sha256', secret).update(`v0:${timestamp}:${raw}`).digest('hex');\nconst a = Buffer.from(expected);\nconst b = Buffer.from(signature);\nif (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return fail('signature mismatch');\n\nlet payload;\ntry {\n  // form body is payload=<urlencoded JSON>; decoded by hand because the sandbox has no URLSearchParams\n  const field = raw.split('&').find((p) => p.startsWith('payload='));\n  payload = JSON.parse(decodeURIComponent(field.slice('payload='.length).replace(/\\+/g, ' ')));\n} catch (e) {\n  return fail('payload is not valid JSON');\n}\nreturn [{ json: { valid: true, payload } }];\n"
       },
       "id": "6d146dc0-f0d0-5b27-9409-2da9d40e74d8",
       "name": "Verify Slack signature",
@@ -125,7 +125,7 @@
             {
               "id": "4bae5364-d378-50e8-b35d-da53764a234f",
               "name": "triage_url",
-              "value": "http://127.0.0.1:8765",
+              "value": "http://127.0.0.1:18765",
               "type": "string"
             },
             {
@@ -158,7 +158,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/sheets/lookup",
+        "url": "=http://127.0.0.1:18770/sheets/lookup",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ticket_id: $('Parse interaction').item.json.ticket_id}) }}",
@@ -376,7 +376,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/gmail/reply",
+        "url": "=http://127.0.0.1:18770/gmail/reply",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({message_id: $('Look up ticket').item.json.message_id, thread_id: $('Look up ticket').item.json.thread_id, to: $('Look up ticket').item.json.from, message: $('Look up ticket').item.json.draft_reply}) }}",
@@ -394,7 +394,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/sheets/update",
+        "url": "=http://127.0.0.1:18770/sheets/update",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ticket_id: $('Parse interaction').item.json.ticket_id, status: 'sent', approved_by: $('Parse interaction').item.json.user, updated_at: $now.toISO()}) }}",
@@ -432,7 +432,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/sheets/update",
+        "url": "=http://127.0.0.1:18770/sheets/update",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ticket_id: $('Parse interaction').item.json.ticket_id, status: 'rejected', approved_by: $('Parse interaction').item.json.user, updated_at: $now.toISO()}) }}",
@@ -490,7 +490,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/slack/views.open",
+        "url": "=http://127.0.0.1:18770/slack/views.open",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ trigger_id: $('Parse interaction').item.json.trigger_id, view: $json.view }) }}",
@@ -508,7 +508,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/gmail/reply",
+        "url": "=http://127.0.0.1:18770/gmail/reply",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({message_id: $('Look up ticket').item.json.message_id, thread_id: $('Look up ticket').item.json.thread_id, to: $('Look up ticket').item.json.from, message: $('Parse interaction').item.json.edited_text}) }}",
@@ -526,7 +526,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://127.0.0.1:8770/sheets/update",
+        "url": "=http://127.0.0.1:18770/sheets/update",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ticket_id: $('Parse interaction').item.json.ticket_id, status: 'sent_edited', draft_reply: $('Parse interaction').item.json.edited_text, approved_by: $('Parse interaction').item.json.user, updated_at: $now.toISO()}) }}",
